@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tienda Tech Premium 5.0</title>
+<style>
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin:0; background:#f5f5f7; color:#1c1c1e;}
+header { background:#fff; padding:25px; text-align:center; font-size:28px; font-weight:600; box-shadow:0 2px 8px rgba(0,0,0,0.05); position:sticky; top:0; z-index:100;}
+.section { padding:50px 20px;}
+.section h2 { text-align:center; margin-bottom:40px; font-size:28px; font-weight:500;}
+.products { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:30px;}
+.card { background:#fff; border-radius:20px; overflow:hidden; text-align:center; transition: transform 0.3s, box-shadow 0.3s; box-shadow:0 5px 15px rgba(0,0,0,0.05); position:relative;}
+.card:hover { transform:translateY(-5px); box-shadow:0 15px 25px rgba(0,0,0,0.12);}
+.card img { width:100%; height:220px; object-fit:cover; transition:transform 0.5s; border-bottom:1px solid #e5e5ea;}
+.card:hover img { transform:scale(1.05);}
+.card h3 { margin:20px 10px 10px; font-size:18px; font-weight:500;}
+.price { color:#0071e3; font-size:18px; margin-bottom:15px; font-weight:600;}
+.whatsapp-btn { display:inline-block; margin-bottom:10px; padding:10px 20px; background:#25d366; color:#fff; font-weight:600; border-radius:12px; text-decoration:none; transition:0.3s;}
+.whatsapp-btn:hover { background:#1ebe5d;}
+#login-panel { max-width:400px; margin:100px auto; background:#fff; padding:30px; border-radius:15px; box-shadow:0 5px 15px rgba(0,0,0,0.05); text-align:center;}
+#login-panel input { width:calc(100% - 20px); padding:10px; margin-bottom:15px; border-radius:10px; border:1px solid #ccc; font-size:16px;}
+#login-panel button { width:100%; padding:12px; background:#0071e3; color:#fff; font-size:16px; font-weight:600; border:none; border-radius:12px; cursor:pointer; transition:0.3s;}
+#login-panel button:hover { background:#005bb5;}
+#admin-panel { display:none; background:#fff; border-radius:15px; padding:25px; max-width:1000px; margin:50px auto; box-shadow:0 5px 15px rgba(0,0,0,0.05);}
+#admin-panel h2 { text-align:center;}
+#admin-panel input, #admin-panel select { width:calc(100% - 20px); padding:10px; margin-bottom:15px; border-radius:10px; border:1px solid #ccc; font-size:16px;}
+#admin-panel button { width:100%; padding:12px; background:#0071e3; color:#fff; font-size:16px; font-weight:600; border:none; border-radius:12px; cursor:pointer; transition:0.3s; margin-bottom:10px;}
+#admin-panel button:hover { background:#005bb5;}
+#admin-panel small { display:block; margin-bottom:10px; color:#666;}
+.card-admin-btns { display:flex; justify-content:center; gap:10px; margin-bottom:15px;}
+.card-admin-btns button { width:auto; padding:6px 12px; font-size:14px;}
+footer { text-align:center; padding:25px; background:#fff; margin-top:40px; box-shadow:0 -2px 8px rgba(0,0,0,0.05); color:#666;}
+.dragging { opacity:0.5;}
+</style>
+</head>
+<body>
+
+<header>TIENDA TECH PREMIUM 5.0</header>
+
+<!-- LOGIN -->
+<div id="login-panel">
+<h2>Acceso Administrativo</h2>
+<input type="text" id="username" placeholder="Usuario">
+<input type="password" id="password" placeholder="Contraseña">
+<button onclick="login()">Ingresar</button>
+</div>
+
+<!-- PRODUCTOS -->
+<div id="product-sections">
+<div class="section" id="apple"><h2>PRODUCTOS APPLE</h2><div class="products" id="apple-products"></div></div>
+<div class="section" id="microsd"><h2>MEMORIAS MICROSD</h2><div class="products" id="microsd-products"></div></div>
+<div class="section" id="usb"><h2>MEMORIAS USB</h2><div class="products" id="usb-products"></div></div>
+</div>
+
+<!-- PANEL ADMINISTRADOR -->
+<div id="admin-panel">
+<h2>Panel de Administración</h2>
+<small>Agregar / Editar productos y crear nuevas categorías</small>
+<input type="text" id="new-category" placeholder="Nueva categoría">
+<button onclick="createCategory()">Crear categoría</button>
+<select id="category"></select>
+<input type="text" id="name" placeholder="Nombre del producto">
+<input type="text" id="price" placeholder="Precio (solo número)">
+<input type="text" id="image" placeholder="URL de la imagen">
+<button onclick="addOrUpdateProduct()">Agregar / Actualizar Producto</button>
+<button onclick="logout()" style="background:#ff3b30;">Cerrar sesión</button>
+</div>
+
+<footer>© 2026 Tienda Tech Premium - Todos los derechos reservados</footer>
+
+<script>
+let defaultProducts = {
+apple:[{name:"AirPods OEM", price:280, image:"https://source.unsplash.com/400x400/?airpods"},{name:"Cargador 20W Tipo C iPhone", price:150, image:"https://source.unsplash.com/400x400/?iphone,charger"},{name:"Cable Lightning USB", price:70, image:"https://source.unsplash.com/400x400/?lightning,cable"}],
+microsd:[{name:"Kingston 16GB", price:80, image:"https://source.unsplash.com/400x400/?microSD"}],
+usb:[{name:"Kingston USB 32GB", price:90, image:"https://source.unsplash.com/400x400/?usb,flashdrive"}]
+};
+let products = JSON.parse(localStorage.getItem('techProducts')) || defaultProducts;
+let editMode={category:null,index:null};
+
+function login(){
+let user=document.getElementById('username').value;
+let pass=document.getElementById('password').value;
+if(user==="admin" && pass==="tech2026"){document.getElementById('login-panel').style.display="none"; document.getElementById('admin-panel').style.display="block"; renderProducts(); populateCategoryOptions();}else{alert("Usuario o contraseña incorrectos");}
+}
+function logout(){document.getElementById('login-panel').style.display="block"; document.getElementById('admin-panel').style.display="none";}
+
+function saveProducts(){localStorage.setItem('techProducts', JSON.stringify(products));}
+function renderProducts(){
+for(const category in products){
+let container=document.getElementById(category+'-products'); container.innerHTML="";
+products[category].forEach((p,index)=>{
+let card=document.createElement('div'); card.className="card"; card.setAttribute('draggable', true);
+card.innerHTML=`<img src="${p.image}" alt="${p.name}"><h3>${p.name}</h3><div class="price">$${p.price}</div><a class="whatsapp-btn" target="_blank" href="https://wa.me/19563275461?text=Hola,%20quiero%20comprar%20${encodeURIComponent(p.name)}">$ Comprar por WhatsApp</a><div class="card-admin-btns"><button onclick="editProduct('${category}',${index})">Editar</button><button onclick="deleteProduct('${category}',${index})" style="background:#ff3b30;">Eliminar</button></div>`;
+card.addEventListener('dragstart', e=>{card.classList.add('dragging'); e.dataTransfer.setData('text/plain', index);});
+card.addEventListener('dragend', e=>{card.classList.remove('dragging'); saveProducts();});
+container.appendChild(card);
+});
+container.addEventListener('dragover', e=>{e.preventDefault(); const dragging=document.querySelector('.dragging'); const after=getDragAfter(container,e.clientY); if(after==null) container.appendChild(dragging); else container.insertBefore(dragging,after); updateOrder(container,category);});
+}
+}
+
+function getDragAfter(container,y){
+const draggable=[...container.querySelectorAll('.card:not(.dragging)')];
+return draggable.reduce((closest,child)=>{const box=child.getBoundingClientRect(); const offset=y-(box.top+box.height/2); if(offset<0 && offset>closest.offset) return {offset:offset,element:child}; else return closest;},{offset:Number.NEGATIVE_INFINITY}).element;
+}
+
+function updateOrder(container,category){
+let newOrder=[]; container.querySelectorAll('.card').forEach(c=>{let name=c.querySelector('h3').innerText; let p=products[category].find(prod=>prod.name===name); if(p) newOrder.push(p);}); products[category]=newOrder; saveProducts();
+}
+
+function addOrUpdateProduct(){
+let category=document.getElementById('category').value;
+let name=document.getElementById('name').value;
+let price=parseFloat(document.getElementById('price').value);
+let image=document.getElementById('image').value;
+if(!category||!name||!price||!image){alert("Rellena todos los campos");return;}
+if(editMode.category!==null){products[editMode.category][editMode.index]={name,price,image}; editMode={category:null,index:null}; document.querySelector("#admin-panel button").innerText="Agregar / Actualizar Producto";}
+else{if(!products[category]) products[category]=[]; products[category].push({name,price,image}); populateCategoryOptions();}
+saveProducts(); renderProducts(); document.getElementById('category').value=''; document.getElementById('name').value=''; document.getElementById('price').value=''; document.getElementById('image').value='';
+}
+
+function editProduct(category,index){
+let p=products[category][index];
+document.getElementById('category').value=category;
+document.getElementById('name').value=p.name;
+document.getElementById('price').value=p.price;
+document.getElementById('image').value=p.image;
+editMode={category,index};
+document.querySelector("#admin-panel button").innerText="Actualizar Producto";
+}
+
+function deleteProduct(category,index){if(confirm("¿Deseas eliminar este producto?")){products[category].splice(index,1); saveProducts(); renderProducts();}}
+
+function populateCategoryOptions(){
+let select=document.getElementById('category'); select.innerHTML="";
+for(let cat in products){let opt=document.createElement('option'); opt.value=cat; opt.innerText=cat.toUpperCase(); select.appendChild(opt);}
+}
+
+function createCategory(){
+let newCat=document.getElementById('new-category').value.trim();
+if(newCat===''){alert("Escribe un nombre de categoría"); return;}
+if(products[newCat]){alert("La categoría ya existe"); return;}
+products[newCat]=[];
+document.getElementById('new-category').value='';
+populateCategoryOptions();
+saveProducts();
+alert("Categoría creada: "+newCat);
+renderProducts();
+}
+
+renderProducts();
+populateCategoryOptions();
+</script>
+
+</body>
+</html>
