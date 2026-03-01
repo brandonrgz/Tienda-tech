@@ -5,153 +5,310 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tienda Tech Premium 5.0</title>
 <style>
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin:0; background:#f5f5f7; color:#1c1c1e;}
-header { background:#fff; padding:25px; text-align:center; font-size:28px; font-weight:600; box-shadow:0 2px 8px rgba(0,0,0,0.05); position:sticky; top:0; z-index:100;}
-.section { padding:50px 20px;}
-.section h2 { text-align:center; margin-bottom:40px; font-size:28px; font-weight:500;}
-.products { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:30px;}
-.card { background:#fff; border-radius:20px; overflow:hidden; text-align:center; transition: transform 0.3s, box-shadow 0.3s; box-shadow:0 5px 15px rgba(0,0,0,0.05); position:relative;}
-.card:hover { transform:translateY(-5px); box-shadow:0 15px 25px rgba(0,0,0,0.12);}
-.card img { width:100%; height:220px; object-fit:cover; transition:transform 0.5s; border-bottom:1px solid #e5e5ea;}
-.card:hover img { transform:scale(1.05);}
-.card h3 { margin:20px 10px 10px; font-size:18px; font-weight:500;}
-.price { color:#0071e3; font-size:18px; margin-bottom:15px; font-weight:600;}
-.whatsapp-btn { display:inline-block; margin-bottom:10px; padding:10px 20px; background:#25d366; color:#fff; font-weight:600; border-radius:12px; text-decoration:none; transition:0.3s;}
-.whatsapp-btn:hover { background:#1ebe5d;}
-#login-panel { max-width:400px; margin:100px auto; background:#fff; padding:30px; border-radius:15px; box-shadow:0 5px 15px rgba(0,0,0,0.05); text-align:center;}
-#login-panel input { width:calc(100% - 20px); padding:10px; margin-bottom:15px; border-radius:10px; border:1px solid #ccc; font-size:16px;}
-#login-panel button { width:100%; padding:12px; background:#0071e3; color:#fff; font-size:16px; font-weight:600; border:none; border-radius:12px; cursor:pointer; transition:0.3s;}
-#login-panel button:hover { background:#005bb5;}
-#admin-panel { display:none; background:#fff; border-radius:15px; padding:25px; max-width:1000px; margin:50px auto; box-shadow:0 5px 15px rgba(0,0,0,0.05);}
-#admin-panel h2 { text-align:center;}
-#admin-panel input, #admin-panel select { width:calc(100% - 20px); padding:10px; margin-bottom:15px; border-radius:10px; border:1px solid #ccc; font-size:16px;}
-#admin-panel button { width:100%; padding:12px; background:#0071e3; color:#fff; font-size:16px; font-weight:600; border:none; border-radius:12px; cursor:pointer; transition:0.3s; margin-bottom:10px;}
-#admin-panel button:hover { background:#005bb5;}
-#admin-panel small { display:block; margin-bottom:10px; color:#666;}
-.card-admin-btns { display:flex; justify-content:center; gap:10px; margin-bottom:15px;}
-.card-admin-btns button { width:auto; padding:6px 12px; font-size:14px;}
-footer { text-align:center; padding:25px; background:#fff; margin-top:40px; box-shadow:0 -2px 8px rgba(0,0,0,0.05); color:#666;}
-.dragging { opacity:0.5;}
+/* ---------- RESET ---------- */
+* { box-sizing: border-box; margin:0; padding:0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background:#f5f5f7; color:#1c1c1e; line-height:1.5; }
+a { text-decoration:none; color:inherit; }
+
+/* ---------- HEADER ---------- */
+header { 
+  background:#0071e3; color:#fff; padding:25px; text-align:center; font-size:28px; font-weight:700; position:sticky; top:0; z-index:100;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+  transition:0.3s;
+}
+
+/* ---------- CARRUSEL ---------- */
+#carousel { max-width:1000px; margin:30px auto; position:relative; overflow:hidden; border-radius:20px; box-shadow:0 6px 18px rgba(0,0,0,0.08); }
+#carousel .slides { display:flex; transition:transform 0.6s ease-in-out; }
+#carousel .slide { min-width:100%; position:relative; opacity:1; transition:opacity 0.6s ease-in-out; }
+#carousel .slide img { width:100%; height:300px; object-fit:cover; border-radius:20px; }
+#carousel .slide .caption { position:absolute; bottom:20px; left:20px; color:#fff; font-size:24px; font-weight:600; text-shadow: 2px 2px 6px rgba(0,0,0,0.6);}
+#carousel .nav { position:absolute; top:50%; transform:translateY(-50%); width:100%; display:flex; justify-content:space-between; padding:0 15px; }
+#carousel .nav span { background:rgba(0,0,0,0.4); color:#fff; font-size:32px; padding:8px 12px; border-radius:50%; cursor:pointer; transition:0.3s; }
+#carousel .nav span:hover { background:rgba(0,0,0,0.7);}
+#carousel .dots { text-align:center; margin-top:10px; }
+#carousel .dot { display:inline-block; width:12px; height:12px; border-radius:50%; background:#ccc; margin:0 5px; cursor:pointer; transition:0.3s; }
+#carousel .dot.active { background:#0071e3; transform:scale(1.3); }
+
+/* ---------- PESTAÑAS DE CATEGORÍAS ---------- */
+#category-tabs { display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin:30px 0; overflow-x:auto; padding:0 10px; scroll-behavior:smooth; }
+#category-tabs::-webkit-scrollbar { height:6px; }
+#category-tabs::-webkit-scrollbar-thumb { background:#ccc; border-radius:3px; }
+#category-tabs button { padding:10px 20px; border:none; border-radius:12px; cursor:pointer; background:#e0e0e0; transition:0.3s; font-weight:600; white-space:nowrap; }
+#category-tabs button.active { background:#0071e3; color:#fff; }
+
+/* ---------- GRID DE PRODUCTOS ---------- */
+.products { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:30px; padding:0 20px; margin-bottom:60px; }
+
+/* ---------- TARJETAS ---------- */
+.card { background:#fff; border-radius:20px; overflow:hidden; text-align:center; transition: transform 0.4s, box-shadow 0.4s; box-shadow:0 6px 18px rgba(0,0,0,0.06); position:relative;}
+.card:hover { transform:translateY(-7px); box-shadow:0 18px 30px rgba(0,0,0,0.12);}
+.card img { width:100%; height:220px; object-fit:cover; transition: transform 0.6s; border-bottom:1px solid #e5e5ea; }
+.card img.error { object-fit:contain; background:#f0f0f0; }
+.card:hover img { transform:scale(1.08); }
+.card h3 { margin:20px 10px 10px; font-size:20px; font-weight:500; }
+.price { color:#0071e3; font-size:18px; margin-bottom:15px; font-weight:600; }
+.whatsapp-btn { display:inline-block; margin-bottom:15px; padding:10px 22px; background:#25d366; color:#fff; font-weight:600; border-radius:12px; transition:0.3s; }
+.whatsapp-btn:hover { background:#1ebe5d; }
+
+/* ---------- LOGIN ---------- */
+#login-panel { max-width:400px; margin:100px auto; background:#fff; padding:35px; border-radius:15px; box-shadow:0 6px 18px rgba(0,0,0,0.08); text-align:center; transition:0.3s; }
+#login-panel input { width:calc(100% - 20px); padding:12px; margin-bottom:18px; border-radius:10px; border:1px solid #ccc; font-size:16px; }
+#login-panel button { width:100%; padding:14px; background:#0071e3; color:#fff; font-size:16px; font-weight:600; border:none; border-radius:12px; cursor:pointer; transition:0.3s; }
+#login-panel button:hover { background:#005bb5; }
+
+/* ---------- PANEL ADMIN ---------- */
+#admin-panel { display:none; background:#fff; border-radius:15px; padding:30px; max-width:1000px; margin:50px auto; box-shadow:0 6px 18px rgba(0,0,0,0.08); transition:0.3s;}
+#admin-panel h2 { text-align:center; margin-bottom:10px; }
+#admin-panel small { display:block; margin-bottom:15px; color:#666; text-align:center; }
+#admin-panel input, #admin-panel select { width:calc(100% - 20px); padding:12px; margin-bottom:18px; border-radius:10px; border:1px solid #ccc; font-size:16px; }
+#admin-panel button { width:100%; padding:14px; background:#0071e3; color:#fff; font-size:16px; font-weight:600; border:none; border-radius:12px; cursor:pointer; transition:0.3s; margin-bottom:12px; }
+#admin-panel button:hover { background:#005bb5; }
+#admin-panel button.logout { background:#ff3b30; }
+.card-admin-btns { display:flex; justify-content:center; gap:10px; margin-bottom:15px; }
+.card-admin-btns button { width:auto; padding:6px 12px; font-size:14px; }
+
+/* ---------- FOOTER ---------- */
+footer { text-align:center; padding:30px; background:#fff; margin-top:40px; box-shadow:0 -4px 12px rgba(0,0,0,0.06); color:#666; font-size:14px; }
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:600px){
+  header { font-size:24px; padding:20px; }
+  .card img { height:180px; }
+  .whatsapp-btn { padding:8px 16px; font-size:14px; }
+  #carousel .slide img { height:200px; }
+  #carousel .caption { font-size:18px; }
+  #category-tabs button { font-size:14px; padding:8px 14px; }
+}
+
+/* ---------- DRAGGING ---------- */
+.dragging { opacity:0.5; }
 </style>
 </head>
 <body>
 
 <header>TIENDA TECH PREMIUM 5.0</header>
 
-<!-- LOGIN -->
-<div id="login-panel">
-<h2>Acceso Administrativo</h2>
-<input type="text" id="username" placeholder="Usuario">
-<input type="password" id="password" placeholder="Contraseña">
-<button onclick="login()">Ingresar</button>
+<!-- CARRUSEL DE DESTACADOS -->
+<div id="carousel">
+  <div class="slides" id="carousel-slides"></div>
+  <div class="nav">
+    <span id="prev">&#10094;</span>
+    <span id="next">&#10095;</span>
+  </div>
+  <div class="dots" id="carousel-dots"></div>
 </div>
 
+<!-- PESTAÑAS DE CATEGORÍAS -->
+<div id="category-tabs"></div>
+
 <!-- PRODUCTOS -->
-<div id="product-sections">
-<div class="section" id="apple"><h2>PRODUCTOS APPLE</h2><div class="products" id="apple-products"></div></div>
-<div class="section" id="microsd"><h2>MEMORIAS MICROSD</h2><div class="products" id="microsd-products"></div></div>
-<div class="section" id="usb"><h2>MEMORIAS USB</h2><div class="products" id="usb-products"></div></div>
+<div class="products" id="products-container"></div>
+
+<!-- LOGIN -->
+<div id="login-panel">
+  <h2>Acceso Administrativo</h2>
+  <input type="text" id="username" placeholder="Usuario">
+  <input type="password" id="password" placeholder="Contraseña">
+  <button onclick="login()">Ingresar</button>
 </div>
 
 <!-- PANEL ADMINISTRADOR -->
 <div id="admin-panel">
-<h2>Panel de Administración</h2>
-<small>Agregar / Editar productos y crear nuevas categorías</small>
-<input type="text" id="new-category" placeholder="Nueva categoría">
-<button onclick="createCategory()">Crear categoría</button>
-<select id="category"></select>
-<input type="text" id="name" placeholder="Nombre del producto">
-<input type="text" id="price" placeholder="Precio (solo número)">
-<input type="text" id="image" placeholder="URL de la imagen">
-<button onclick="addOrUpdateProduct()">Agregar / Actualizar Producto</button>
-<button onclick="logout()" style="background:#ff3b30;">Cerrar sesión</button>
+  <h2>Panel de Administración</h2>
+  <small>Agregar / Editar productos y crear nuevas categorías</small>
+  <input type="text" id="new-category" placeholder="Nueva categoría">
+  <button onclick="createCategory()">Crear categoría</button>
+  <select id="category"></select>
+  <input type="text" id="name" placeholder="Nombre del producto">
+  <input type="number" id="price" placeholder="Precio (solo número)">
+  <input type="text" id="image" placeholder="URL de la imagen">
+  <button onclick="addOrUpdateProduct()">Agregar / Actualizar Producto</button>
+  <button onclick="logout()" class="logout">Cerrar sesión</button>
 </div>
 
 <footer>© 2026 Tienda Tech Premium - Todos los derechos reservados</footer>
 
 <script>
+// ---------- DATOS INICIALES ----------
 let defaultProducts = {
-apple:[{name:"AirPods OEM", price:280, image:"https://source.unsplash.com/400x400/?airpods"},{name:"Cargador 20W Tipo C iPhone", price:150, image:"https://source.unsplash.com/400x400/?iphone,charger"},{name:"Cable Lightning USB", price:70, image:"https://source.unsplash.com/400x400/?lightning,cable"}],
-microsd:[{name:"Kingston 16GB", price:80, image:"https://source.unsplash.com/400x400/?microSD"}],
-usb:[{name:"Kingston USB 32GB", price:90, image:"https://source.unsplash.com/400x400/?usb,flashdrive"}]
+  apple:[
+    {name:"AirPods OEM", price:280, image:"https://source.unsplash.com/400x400/?airpods"},
+    {name:"Cargador 20W Tipo C iPhone", price:150, image:"https://source.unsplash.com/400x400/?iphone,charger"},
+    {name:"Cable Lightning USB", price:70, image:"https://source.unsplash.com/400x400/?lightning,cable"}
+  ],
+  microsd:[{name:"Kingston 16GB", price:80, image:"https://source.unsplash.com/400x400/?microSD"}],
+  usb:[{name:"Kingston USB 32GB", price:90, image:"https://source.unsplash.com/400x400/?usb,flashdrive"}]
 };
 let products = JSON.parse(localStorage.getItem('techProducts')) || defaultProducts;
 let editMode={category:null,index:null};
+let currentCategory=null;
 
+// ---------- LOGIN / LOGOUT ----------
 function login(){
-let user=document.getElementById('username').value;
-let pass=document.getElementById('password').value;
-if(user==="admin" && pass==="tech2026"){document.getElementById('login-panel').style.display="none"; document.getElementById('admin-panel').style.display="block"; renderProducts(); populateCategoryOptions();}else{alert("Usuario o contraseña incorrectos");}
+  let user=document.getElementById('username').value.trim();
+  let pass=document.getElementById('password').value.trim();
+  if(user==="admin" && pass==="tech2026"){
+    document.getElementById('login-panel').style.display="none"; 
+    document.getElementById('admin-panel').style.display="block"; 
+    populateCategoryOptions(); 
+    renderProducts(currentCategory || Object.keys(products)[0]);
+  } else {
+    alert("Usuario o contraseña incorrectos");
+  }
 }
-function logout(){document.getElementById('login-panel').style.display="block"; document.getElementById('admin-panel').style.display="none";}
-
-function saveProducts(){localStorage.setItem('techProducts', JSON.stringify(products));}
-function renderProducts(){
-for(const category in products){
-let container=document.getElementById(category+'-products'); container.innerHTML="";
-products[category].forEach((p,index)=>{
-let card=document.createElement('div'); card.className="card"; card.setAttribute('draggable', true);
-card.innerHTML=`<img src="${p.image}" alt="${p.name}"><h3>${p.name}</h3><div class="price">$${p.price}</div><a class="whatsapp-btn" target="_blank" href="https://wa.me/19563275461?text=Hola,%20quiero%20comprar%20${encodeURIComponent(p.name)}">$ Comprar por WhatsApp</a><div class="card-admin-btns"><button onclick="editProduct('${category}',${index})">Editar</button><button onclick="deleteProduct('${category}',${index})" style="background:#ff3b30;">Eliminar</button></div>`;
-card.addEventListener('dragstart', e=>{card.classList.add('dragging'); e.dataTransfer.setData('text/plain', index);});
-card.addEventListener('dragend', e=>{card.classList.remove('dragging'); saveProducts();});
-container.appendChild(card);
-});
-container.addEventListener('dragover', e=>{e.preventDefault(); const dragging=document.querySelector('.dragging'); const after=getDragAfter(container,e.clientY); if(after==null) container.appendChild(dragging); else container.insertBefore(dragging,after); updateOrder(container,category);});
-}
+function logout(){
+  document.getElementById('login-panel').style.display="block"; 
+  document.getElementById('admin-panel').style.display="none";
 }
 
-function getDragAfter(container,y){
-const draggable=[...container.querySelectorAll('.card:not(.dragging)')];
-return draggable.reduce((closest,child)=>{const box=child.getBoundingClientRect(); const offset=y-(box.top+box.height/2); if(offset<0 && offset>closest.offset) return {offset:offset,element:child}; else return closest;},{offset:Number.NEGATIVE_INFINITY}).element;
+// ---------- PESTAÑAS DE CATEGORÍAS ----------
+function renderCategoryTabs(){
+  const tabsContainer=document.getElementById('category-tabs');
+  tabsContainer.innerHTML='';
+  Object.keys(products).forEach((cat,i)=>{
+    const btn=document.createElement('button');
+    btn.innerText=cat.toUpperCase();
+    btn.className=(i===0)?'active':'';
+    btn.addEventListener('click', ()=>{ selectCategory(cat); });
+    tabsContainer.appendChild(btn);
+  });
+  currentCategory=Object.keys(products)[0];
+}
+function selectCategory(cat){
+  currentCategory=cat;
+  document.querySelectorAll('#category-tabs button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#category-tabs button').forEach(b=>{
+    if(b.innerText.toLowerCase()===cat.toLowerCase()) b.classList.add('active');
+  });
+  renderProducts(cat);
 }
 
-function updateOrder(container,category){
-let newOrder=[]; container.querySelectorAll('.card').forEach(c=>{let name=c.querySelector('h3').innerText; let p=products[category].find(prod=>prod.name===name); if(p) newOrder.push(p);}); products[category]=newOrder; saveProducts();
+// ---------- RENDER PRODUCTOS ----------
+function renderProducts(category){
+  const container=document.getElementById('products-container');
+  container.innerHTML='';
+  if(!category || !products[category]) return;
+  products[category].forEach((p,index)=>{
+    const card=document.createElement('div'); card.className='card';
+    card.innerHTML=`
+      <img src="${p.image}" alt="${p.name}" onerror="this.onerror=null;this.src='https://via.placeholder.com/400?text=No+Image';this.classList.add('error')">
+      <h3>${p.name}</h3>
+      <div class="price">$${p.price}</div>
+      <a class="whatsapp-btn" target="_blank" href="https://wa.me/19563275461?text=Hola,%20quiero%20comprar%20${encodeURIComponent(p.name)}">Comprar por WhatsApp</a>
+      <div class="card-admin-btns">
+        <button onclick="editProduct('${category}',${index})">Editar</button>
+        <button onclick="deleteProduct('${category}',${index})" style="background:#ff3b30;">Eliminar</button>
+      </div>`;
+    container.appendChild(card);
+  });
+  setupCarousel();
 }
+
+// ---------- CRUD ----------
+function saveProducts(){ localStorage.setItem('techProducts', JSON.stringify(products)); }
 
 function addOrUpdateProduct(){
-let category=document.getElementById('category').value;
-let name=document.getElementById('name').value;
-let price=parseFloat(document.getElementById('price').value);
-let image=document.getElementById('image').value;
-if(!category||!name||!price||!image){alert("Rellena todos los campos");return;}
-if(editMode.category!==null){products[editMode.category][editMode.index]={name,price,image}; editMode={category:null,index:null}; document.querySelector("#admin-panel button").innerText="Agregar / Actualizar Producto";}
-else{if(!products[category]) products[category]=[]; products[category].push({name,price,image}); populateCategoryOptions();}
-saveProducts(); renderProducts(); document.getElementById('category').value=''; document.getElementById('name').value=''; document.getElementById('price').value=''; document.getElementById('image').value='';
+  let category=document.getElementById('category').value.trim();
+  let name=document.getElementById('name').value.trim();
+  let price=parseFloat(document.getElementById('price').value);
+  let image=document.getElementById('image').value.trim();
+  if(!category||!name||isNaN(price)||!image){alert("Rellena todos los campos correctamente");return;}
+  if(editMode.category!==null){
+    products[editMode.category][editMode.index]={name,price,image};
+    editMode={category:null,index:null};
+  } else {
+    if(!products[category]) products[category]=[];
+    products[category].push({name,price,image});
+  }
+  saveProducts(); renderCategoryTabs(); renderProducts(currentCategory);
+  document.getElementById('category').value=''; document.getElementById('name').value=''; document.getElementById('price').value=''; document.getElementById('image').value='';
 }
 
 function editProduct(category,index){
-let p=products[category][index];
-document.getElementById('category').value=category;
-document.getElementById('name').value=p.name;
-document.getElementById('price').value=p.price;
-document.getElementById('image').value=p.image;
-editMode={category,index};
-document.querySelector("#admin-panel button").innerText="Actualizar Producto";
+  let p=products[category][index];
+  document.getElementById('category').value=category;
+  document.getElementById('name').value=p.name;
+  document.getElementById('price').value=p.price;
+  document.getElementById('image').value=p.image;
+  editMode={category,index};
 }
 
-function deleteProduct(category,index){if(confirm("¿Deseas eliminar este producto?")){products[category].splice(index,1); saveProducts(); renderProducts();}}
+function deleteProduct(category,index){
+  if(confirm("¿Deseas eliminar este producto?")){
+    products[category].splice(index,1); saveProducts(); renderProducts(currentCategory);
+  }
+}
 
 function populateCategoryOptions(){
-let select=document.getElementById('category'); select.innerHTML="";
-for(let cat in products){let opt=document.createElement('option'); opt.value=cat; opt.innerText=cat.toUpperCase(); select.appendChild(opt);}
+  const select=document.getElementById('category');
+  select.innerHTML='';
+  Object.keys(products).forEach(cat=>{
+    const opt=document.createElement('option'); opt.value=cat; opt.innerText=cat.toUpperCase(); select.appendChild(opt);
+  });
+  renderCategoryTabs();
 }
 
 function createCategory(){
-let newCat=document.getElementById('new-category').value.trim();
-if(newCat===''){alert("Escribe un nombre de categoría"); return;}
-if(products[newCat]){alert("La categoría ya existe"); return;}
-products[newCat]=[];
-document.getElementById('new-category').value='';
-populateCategoryOptions();
-saveProducts();
-alert("Categoría creada: "+newCat);
-renderProducts();
+  let newCat=document.getElementById('new-category').value.trim();
+  if(newCat===''){alert("Escribe un nombre de categoría"); return;}
+  if(products[newCat]){alert("La categoría ya existe"); return;}
+  products[newCat]=[];
+  document.getElementById('new-category').value='';
+  populateCategoryOptions(); saveProducts();
+  alert("Categoría creada: "+newCat);
 }
 
-renderProducts();
-populateCategoryOptions();
-</script>
+// ---------- CARRUSEL ----------
+let currentSlide=0;
+let slideInterval;
 
+function setupCarousel(){
+  const slidesContainer=document.getElementById('carousel-slides');
+  const dotsContainer=document.getElementById('carousel-dots');
+  slidesContainer.innerHTML=''; dotsContainer.innerHTML='';
+
+  const destacados=[];
+  for(let cat in products){
+    if(products[cat].length>0) destacados.push(products[cat][0]);
+  }
+  if(destacados.length===0) return;
+
+  destacados.forEach((p,i)=>{
+    const slide=document.createElement('div'); slide.className='slide';
+    slide.innerHTML=`<img src="${p.image}" alt="${p.name}" onerror="this.onerror=null;this.src='https://via.placeholder.com/400?text=No+Image';this.classList.add('error')"><div class="caption">${p.name}</div>`;
+    slidesContainer.appendChild(slide);
+
+    const dot=document.createElement('span'); dot.className='dot';
+    if(i===0) dot.classList.add('active');
+    dot.addEventListener('click', ()=>{showSlide(i);});
+    dotsContainer.appendChild(dot);
+  });
+
+  currentSlide=0;
+  slidesContainer.style.transform=`translateX(0)`;
+  if(slideInterval) clearInterval(slideInterval);
+  slideInterval=setInterval(()=>{nextSlide();},5000);
+
+  document.getElementById('prev').onclick=prevSlide;
+  document.getElementById('next').onclick=nextSlide;
+}
+
+function showSlide(index){
+  const slidesContainer=document.getElementById('carousel-slides');
+  const dots=document.querySelectorAll('#carousel-dots .dot');
+  currentSlide=index;
+  slidesContainer.style.transform=`translateX(-${currentSlide*100}%)`;
+  dots.forEach(d=>d.classList.remove('active'));
+  dots[currentSlide].classList.add('active');
+}
+
+function nextSlide(){ showSlide((currentSlide+1)%document.querySelectorAll('#carousel-dots .dot').length); }
+function prevSlide(){ showSlide((currentSlide-1+document.querySelectorAll('#carousel-dots .dot').length)%document.querySelectorAll('#carousel-dots .dot').length); }
+
+// ---------- INICIAL ----------
+populateCategoryOptions();
+renderProducts(Object.keys(products)[0]);
+</script>
 </body>
 </html>
